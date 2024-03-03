@@ -2,12 +2,14 @@ import React, { ChangeEvent, useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import Editor from "@/components/Editor";
 import { useDebounceValue } from "usehooks-ts";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "@/db";
+import { Button } from "./ui/button";
 const Note = () => {
   const [debouncedTitleValue, setTitleValue] = useDebounceValue("", 900);
   const [content, setContent] = useState("");
   const ref = useRef(false);
+  const navigate = useNavigate()
   const { id } = useParams();
   useEffect(() => {
     const getNote = async () => {
@@ -22,6 +24,10 @@ const Note = () => {
     };
     getNote();
   }, [id, setTitleValue]);
+
+  const generateFlashCards = () => {
+    navigate(`/flash-cards/${id}`)
+  }
 
   useEffect(() => {
     let flag = true;
@@ -55,6 +61,7 @@ const Note = () => {
         placeholder="Enter a Title"
       />
       <Editor content={content}/>
+      <Button className="absolute bottom-5 right-5" onClick={generateFlashCards}>Generate Flashcards</Button>
     </div>
   );
 };
